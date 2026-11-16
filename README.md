@@ -91,7 +91,7 @@ Otras reglas del equipo:
 - Las acciones destructivas piden confirmación.
 
   
-## 5. Orden de desarrollo
+## Orden de desarrollo
 
 | Orden | Módulo | Qué se hace | Necesita haber terminado |
 |:--:|---|---|---|
