@@ -34,8 +34,8 @@ Este documento sirve como registro de avance para el desarrollo del proyecto. Pe
 | [ ] | 2 | **M3. Catálogos y diseño base** | RF6, RF8, RNF4 | CRUD de materias y espacios (solo admin). Estructura de plantilla y menú dinámico por rol. | M1 | - |
 | [ ] | 3 | **M10 (base). Función de puntos** | RF20 (base), RNF8 | `GamificacionServicio::otorgarPuntos()` y tablas base de reglas e historial de XP. | M1 | - |
 | [ ] | 4 | **M4. Disponibilidad del mentor** | RF7 | Configuración de horarios por mentor (día, hora de inicio y fin). | M1 | Ronald Baque |
-| [ ] | 5 | **M2. Perfil y materias dominadas** | RF5 | Ver y editar perfil personal, selección de materias dominadas por el mentor. | M1, M3 | Ronald Baque |
-| [ ] | 6 | **M5. Búsqueda de mentores** | RF9 | Filtro asíncrono de mentores por materia y día sin recargar página. | M2, M3, M4 | - |
+| [ ] | 5 | **M2. Perfil y materias dominadas** | RF5 | Ver y editar perfil personal, selección de materias dominadas por el mentor. | M1, M3 | - |
+| [ ] | 6 | **M5. Búsqueda de mentores** | RF9 | Filtro asíncrono de mentores por materia y día sin recargar página. | M2, M3, M4 | Ronald Baque |
 | [ ] | 7 | **M11 (base). Gestión de usuarios y auditoría** | RF16, RF17, RF19 (base), RNF7 | Listar, suspender, reactivar y cambiar de rol a usuarios. Registro de auditoría básico. | M1, M3 | - |
 | [ ] | 8 | **M6. Reservas y validaciones** | RF10, RF11, RNF3 | Reservas individuales o grupales, validación estricta de cupos y choque de horarios. | M3, M4, M5 | - |
 
