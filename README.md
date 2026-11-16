@@ -4,7 +4,15 @@ Sistema web donde **estudiantes** pueden buscar **mentores** por materia y día,
 
 ## Integrantes del grupo
 
-- Moreira Moreno Abel
+- Agudo Triana Jordy Manuel (Lider)
+- Moreira Moreno Abel Daniel
+- Mora Flores Briggitte Lisbeth
+- Orellana Lavayen Dherian Mikael
+- Herrera Motoche Danny Alexander
+- Rodriguez Tierra Cesar Emanuel
+- Carrillo Villao Alex Antonio
+- Reyes Pozo Emily Lissette
+- Ronald Steven Baque Pérez
  
 ## Arquitectura
  
