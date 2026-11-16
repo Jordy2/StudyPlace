@@ -1,0 +1,53 @@
+# Entorno y configuración local sensible
+.env
+.env.*
+!.env.example
+*.local.php
+
+# Base de datos (respaldos temporales o volcados personales)
+# Nota: database/script.sql y database/datos_prueba.sql sí se versionan
+*.sql.bak
+*.dump
+
+# Logs y archivos temporales
+*.log
+error_log
+*.tmp
+*.temp
+*.swp
+*~
+
+# Archivos temporales de Microsoft Office (Word/Excel en documentacion/)
+~$*.docx
+~$*.doc
+~$*.xlsx
+~$*.pptx
+
+# Dependencias (en caso de usar paquetes/librerías externas a futuro)
+vendor/
+node_modules/
+
+# Sitio de documentación (Hugo - salida generada)
+docs/public/
+docs/resources/_gen/
+
+# Archivos del sistema operativo
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Editores e IDEs
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.sublime-project
+*.sublime-workspace
