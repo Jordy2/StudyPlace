@@ -1,5 +1,7 @@
-# Mentoría Académica
- 
+# TEMA
+
+> Gestión de Mentoria de Pares y Tutorías Académicas.
+
 Sistema web donde **estudiantes** pueden buscar **mentores** por materia y día, reservar sesiones de tutoría, confirmar su asistencia y dejar reseñas. Incluye puntos, insignias y rankings (gamificación) y un panel para el **administrador**.
 
 ## Integrantes del grupo
