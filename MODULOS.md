@@ -30,7 +30,7 @@ Este documento sirve como registro de avance para el desarrollo del proyecto. Pe
 
 | Estado | Orden | Módulo | Requisitos | Descripción clave | Depende de | Encargado |
 |:---:|:---:|---|---|---|---|---|
-| [ ] | 1 | **M1. Autenticación, roles y base común** | RF1, RF2, RF3, RF4, RF16, RNF1, RNF9, RNF10 | Registro, login, logout, sesión con tokens Bearer, middleware de rol y pantallas `login.html` y `registro.html`. | Fase 0 | - |
+| [ ] | 1 | **M1. Autenticación, roles y base común** | RF1, RF2, RF3, RF4, RF16, RNF1, RNF9, RNF10 | Registro, login, logout, sesión con tokens Bearer, middleware de rol y pantallas `login.html` y `registro.html`. | Fase 0 | Moreira Abel |
 | [ ] | 2 | **M3. Catálogos y diseño base** | RF6, RF8, RNF4 | CRUD de materias y espacios (solo admin). Estructura de plantilla y menú dinámico por rol. | M1 | - |
 | [ ] | 3 | **M10 (base). Función de puntos** | RF20 (base), RNF8 | `GamificacionServicio::otorgarPuntos()` y tablas base de reglas e historial de XP. | M1 | - |
 | [ ] | 4 | **M4. Disponibilidad del mentor** | RF7 | Configuración de horarios por mentor (día, hora de inicio y fin). | M1 | - |
