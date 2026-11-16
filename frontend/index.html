@@ -42,5 +42,52 @@
 
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const menu = document.getElementById('menu-navegacion');
+      const token = API.obtenerToken();
+
+      if (!token || !menu) return;
+
+      try {
+        const respuesta = await API.fetch('auth/me.php');
+        const usuario = respuesta?.datos?.usuario;
+
+        if (usuario) {
+          const liUsuario = document.createElement('li');
+          liUsuario.style.fontSize = '0.875rem';
+          liUsuario.style.color = 'var(--color-text-muted)';
+          liUsuario.textContent = `Hola, ${usuario.nombre} (${usuario.rol})`;
+
+          const liLogout = document.createElement('li');
+          const btnLogout = document.createElement('button');
+          btnLogout.type = 'button';
+          btnLogout.id = 'btn-logout';
+          btnLogout.className = 'btn btn-secondary';
+          btnLogout.textContent = 'Cerrar Sesión';
+
+          btnLogout.addEventListener('click', async () => {
+            try {
+              await API.fetch('auth/logout.php', { method: 'POST' });
+            } catch (_) {
+            } finally {
+              API.eliminarToken();
+              localStorage.removeItem(window.API_CONFIG?.USER_KEY || 'studyplace_user');
+              window.location.reload();
+            }
+          });
+
+          liLogout.appendChild(btnLogout);
+
+          menu.innerHTML = '';
+          menu.appendChild(liUsuario);
+          menu.appendChild(liLogout);
+        }
+      } catch (_) {
+        API.eliminarToken();
+        localStorage.removeItem(window.API_CONFIG?.USER_KEY || 'studyplace_user');
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Usuario - StudyPlace</title>
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container navbar">
+      <a href="../index.html" class="logo">
+        <span>StudyPlace</span>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="../index.html" class="btn btn-secondary">Inicio</a></li>
+          <li><a href="login.html" class="btn btn-primary">Iniciar Sesión</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container auth-container">
+    <section class="auth-card">
+      <h1 class="auth-title">Crear Cuenta</h1>
+      <p class="auth-subtitle">Regístrate como estudiante o mentor académico</p>
+
+      <div id="alerta" class="alert" role="alert" aria-live="polite"></div>
+
+      <form id="form-registro" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombre completo</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            class="form-input"
+            placeholder="Juan Pérez"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="correo">Correo electrónico</label>
+          <input
+            type="email"
+            id="correo"
+            name="correo"
+            class="form-input"
+            placeholder="juan.perez@universidad.edu.ec"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rol">Tipo de perfil</label>
+          <select id="rol" name="rol" class="form-select" required>
+            <option value="estudiante">Estudiante</option>
+            <option value="mentor">Mentor</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="grupo-semestre">
+          <label class="form-label" for="semestre">Semestre actual (1 al 12)</label>
+          <input
+            type="number"
+            id="semestre"
+            name="semestre"
+            class="form-input"
+            min="1"
+            max="12"
+            value="1"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Contraseña (mínimo 8 caracteres)</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-input"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password_confirm">Confirmar contraseña</label>
+          <input
+            type="password"
+            id="password_confirm"
+            name="password_confirm"
+            class="form-input"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn btn-primary btn-block">
+          Registrarme
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>¿Ya tienes una cuenta registrada? <a href="login.html">Inicia sesión</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 StudyPlace - Plataforma de Mentoría Académica</p>
+    </div>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/controladores/authControlador.js"></script>
+</body>
+</html>
