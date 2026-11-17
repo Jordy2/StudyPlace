@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyPlace - Gestión de Catálogos</title>
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container navbar">
+      <a href="../index.html" class="logo">
+        <span>StudyPlace</span>
+      </a>
+      <button class="menu-toggle" id="btn-menu-toggle" aria-label="Abrir menú">&#9776;</button>
+      <nav>
+        <ul class="nav-links" id="menu-navegacion">
+          <!-- Renderizado dinámicamente por MenuComponente -->
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Gestión de Catálogos</h1>
+        <p class="page-subtitle">Administra los catálogos del sistema académico (Materias y Espacios físicos o virtuales).</p>
+      </div>
+    </div>
+
+    <div id="alerta-global" class="alert"></div>
+
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-target="tab-materias">Materias (RF6)</button>
+      <button class="tab-btn" data-target="tab-espacios">Espacios de Tutoría (RF8)</button>
+    </div>
+
+    <!-- Pestaña Materias -->
+    <section id="tab-materias" class="tab-content active">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 600;">Listado de Materias</h2>
+        <button class="btn btn-primary" id="btn-nueva-materia">+ Nueva Materia</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Estado</th>
+              <th style="width: 140px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-materias-body">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--color-text-muted);">Cargando materias...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Pestaña Espacios -->
+    <section id="tab-espacios" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 600;">Listado de Espacios</h2>
+        <button class="btn btn-primary" id="btn-nuevo-espacio">+ Nuevo Espacio</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Capacidad / Enlace</th>
+              <th>Ubicación</th>
+              <th>Estado</th>
+              <th style="width: 140px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-espacios-body">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--color-text-muted);">Cargando espacios...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Materia -->
+  <div class="modal-overlay" id="modal-materia">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-materia-titulo">Nueva Materia</h3>
+        <button class="modal-close" type="button">&times;</button>
+      </div>
+      <form id="form-materia">
+        <div class="modal-body">
+          <input type="hidden" id="modal-materia-id">
+          
+          <div class="form-group">
+            <label class="form-label" for="materia-codigo">Código de Materia *</label>
+            <input type="text" id="materia-codigo" class="form-input" placeholder="Ej. MAT-101" required style="text-transform: uppercase;">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="materia-nombre">Nombre de la Materia *</label>
+            <input type="text" id="materia-nombre" class="form-input" placeholder="Ej. Cálculo Diferencial" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="materia-descripcion">Descripción</label>
+            <textarea id="materia-descripcion" class="form-input" rows="3" placeholder="Breve resumen del contenido académico"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="materia-estado">Estado</label>
+            <select id="materia-estado" class="form-select">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-modal-cancelar">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Espacio -->
+  <div class="modal-overlay" id="modal-espacio">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-espacio-titulo">Nuevo Espacio</h3>
+        <button class="modal-close" type="button">&times;</button>
+      </div>
+      <form id="form-espacio">
+        <div class="modal-body">
+          <input type="hidden" id="modal-espacio-id">
+
+          <div class="form-group">
+            <label class="form-label" for="espacio-nombre">Nombre del Espacio *</label>
+            <input type="text" id="espacio-nombre" class="form-input" placeholder="Ej. Aula 104 o Google Meet Sala 1" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="espacio-tipo">Tipo de Espacio *</label>
+            <select id="espacio-tipo" class="form-select" required>
+              <option value="fisico">Aula Física (con capacidad)</option>
+              <option value="virtual">Sala Virtual (con enlace web)</option>
+            </select>
+          </div>
+
+          <!-- Campos para Aula Física -->
+          <div id="grupo-espacio-fisico">
+            <div class="form-group">
+              <label class="form-label" for="espacio-capacidad">Capacidad Máxima (estudiantes) *</label>
+              <input type="number" id="espacio-capacidad" class="form-input" min="1" max="500" placeholder="Ej. 25" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="espacio-ubicacion">Ubicación Física</label>
+              <input type="text" id="espacio-ubicacion" class="form-input" placeholder="Ej. Edificio Central - Piso 1">
+            </div>
+          </div>
+
+          <!-- Campos para Sala Virtual -->
+          <div id="grupo-espacio-virtual" style="display: none;">
+            <div class="form-group">
+              <label class="form-label" for="espacio-enlace">Enlace URL Externo *</label>
+              <input type="url" id="espacio-enlace" class="form-input" placeholder="https://meet.google.com/xxx-yyyy-zzz">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="espacio-estado">Estado</label>
+            <select id="espacio-estado" class="form-select">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-modal-cancelar">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Confirmar Eliminación (RNF7) -->
+  <div class="modal-overlay" id="modal-confirmar-eliminar">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirmar Acción Destructiva</h3>
+        <button class="modal-close" type="button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmar-eliminar-mensaje" style="color: var(--color-text);">¿Estás seguro de que deseas eliminar este registro?</p>
+        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+          Se aplicará una baja lógica para preservar la integridad de registros académicos asociados.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-modal-cancelar">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btn-confirmar-eliminar">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 StudyPlace - Plataforma de Mentoría Académica</p>
+    </div>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/componentes/menu.js"></script>
+  <script src="../js/componentes/layout.js"></script>
+  <script src="../js/modelos/catalogoModelo.js"></script>
+  <script src="../js/vistas/catalogoVista.js"></script>
+  <script src="../js/controladores/catalogoControlador.js"></script>
+</body>
+</html>

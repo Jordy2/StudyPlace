@@ -14,10 +14,12 @@
       </a>
       <nav>
         <ul class="nav-links" id="menu-navegacion">
+          <li><a href="index.html" class="nav-link active">Inicio</a></li>
           <li><a href="paginas/login.html" class="btn btn-secondary">Iniciar Sesión</a></li>
           <li><a href="paginas/registro.html" class="btn btn-primary">Registrarse</a></li>
         </ul>
       </nav>
+      <button class="menu-toggle" id="btn-menu-toggle" aria-label="Abrir menú">&#9776;</button>
     </div>
   </header>
 
@@ -42,52 +44,7 @@
 
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const menu = document.getElementById('menu-navegacion');
-      const token = API.obtenerToken();
-
-      if (!token || !menu) return;
-
-      try {
-        const respuesta = await API.fetch('auth/me.php');
-        const usuario = respuesta?.datos?.usuario;
-
-        if (usuario) {
-          const liUsuario = document.createElement('li');
-          liUsuario.style.fontSize = '0.875rem';
-          liUsuario.style.color = 'var(--color-text-muted)';
-          liUsuario.textContent = `Hola, ${usuario.nombre} (${usuario.rol})`;
-
-          const liLogout = document.createElement('li');
-          const btnLogout = document.createElement('button');
-          btnLogout.type = 'button';
-          btnLogout.id = 'btn-logout';
-          btnLogout.className = 'btn btn-secondary';
-          btnLogout.textContent = 'Cerrar Sesión';
-
-          btnLogout.addEventListener('click', async () => {
-            try {
-              await API.fetch('auth/logout.php', { method: 'POST' });
-            } catch (_) {
-            } finally {
-              API.eliminarToken();
-              localStorage.removeItem(window.API_CONFIG?.USER_KEY || 'studyplace_user');
-              window.location.reload();
-            }
-          });
-
-          liLogout.appendChild(btnLogout);
-
-          menu.innerHTML = '';
-          menu.appendChild(liUsuario);
-          menu.appendChild(liLogout);
-        }
-      } catch (_) {
-        API.eliminarToken();
-        localStorage.removeItem(window.API_CONFIG?.USER_KEY || 'studyplace_user');
-      }
-    });
-  </script>
+  <script src="js/componentes/menu.js"></script>
+  <script src="js/componentes/layout.js"></script>
 </body>
 </html>

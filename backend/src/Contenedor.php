@@ -4,13 +4,23 @@ namespace App;
 
 use App\Config\Conexion;
 use App\Contratos\AutenticacionServicioInterface;
+use App\Contratos\EspacioRepositorioInterface;
+use App\Contratos\EspacioServicioInterface;
+use App\Contratos\MateriaRepositorioInterface;
+use App\Contratos\MateriaServicioInterface;
 use App\Contratos\TokenRepositorioInterface;
 use App\Contratos\UsuarioRepositorioInterface;
 use App\Controladores\AutenticacionControlador;
+use App\Controladores\EspacioControlador;
+use App\Controladores\MateriaControlador;
 use App\Middleware\AutenticacionMiddleware;
+use App\Repositorios\EspacioRepositorio;
+use App\Repositorios\MateriaRepositorio;
 use App\Repositorios\TokenRepositorio;
 use App\Repositorios\UsuarioRepositorio;
 use App\Servicios\AutenticacionServicio;
+use App\Servicios\EspacioServicio;
+use App\Servicios\MateriaServicio;
 use PDO;
 
 class Contenedor {
@@ -20,6 +30,14 @@ class Contenedor {
   private ?AutenticacionServicioInterface $authServicio = null;
   private ?AutenticacionMiddleware $authMiddleware = null;
   private ?AutenticacionControlador $authControlador = null;
+
+  private ?MateriaRepositorioInterface $materiaRepo = null;
+  private ?MateriaServicioInterface $materiaServicio = null;
+  private ?MateriaControlador $materiaControlador = null;
+
+  private ?EspacioRepositorioInterface $espacioRepo = null;
+  private ?EspacioServicioInterface $espacioServicio = null;
+  private ?EspacioControlador $espacioControlador = null;
 
   public function __construct(?PDO $pdo = null) {
     $this->pdo = $pdo;
@@ -79,5 +97,63 @@ class Contenedor {
     }
 
     return $this->authControlador;
+  }
+
+  public function obtenerMateriaRepositorio(): MateriaRepositorioInterface {
+    if ($this->materiaRepo === null) {
+      $this->materiaRepo = new MateriaRepositorio($this->obtenerConexion());
+    }
+
+    return $this->materiaRepo;
+  }
+
+  public function obtenerMateriaServicio(): MateriaServicioInterface {
+    if ($this->materiaServicio === null) {
+      $this->materiaServicio = new MateriaServicio(
+        $this->obtenerMateriaRepositorio()
+      );
+    }
+
+    return $this->materiaServicio;
+  }
+
+  public function obtenerMateriaControlador(): MateriaControlador {
+    if ($this->materiaControlador === null) {
+      $this->materiaControlador = new MateriaControlador(
+        $this->obtenerMateriaServicio(),
+        $this->obtenerAutenticacionMiddleware()
+      );
+    }
+
+    return $this->materiaControlador;
+  }
+
+  public function obtenerEspacioRepositorio(): EspacioRepositorioInterface {
+    if ($this->espacioRepo === null) {
+      $this->espacioRepo = new EspacioRepositorio($this->obtenerConexion());
+    }
+
+    return $this->espacioRepo;
+  }
+
+  public function obtenerEspacioServicio(): EspacioServicioInterface {
+    if ($this->espacioServicio === null) {
+      $this->espacioServicio = new EspacioServicio(
+        $this->obtenerEspacioRepositorio()
+      );
+    }
+
+    return $this->espacioServicio;
+  }
+
+  public function obtenerEspacioControlador(): EspacioControlador {
+    if ($this->espacioControlador === null) {
+      $this->espacioControlador = new EspacioControlador(
+        $this->obtenerEspacioServicio(),
+        $this->obtenerAutenticacionMiddleware()
+      );
+    }
+
+    return $this->espacioControlador;
   }
 }
