@@ -47,4 +47,4 @@ Este documento sirve como registro de avance para el desarrollo del proyecto. Pe
 | [ ] | 10 | **M10 (completo). Insignias y ranking** | RF21, RF22 | Insignias automáticas por eventos, ranking de mentores y estudiantes, pantalla "Mis logros". | M6, eventos de M8/M9 | - |
 | [ ] | 11 | **M8. Asistencia con PIN y horas** | RF13, RF15 | Generación de PIN por el mentor, confirmación del estudiante y acumulación de horas. | M6, M7 | Emily Reyes |
 | [ ] | 12 | **M9. Reseñas** | RF14 | Calificación con estrellas (1-5) y comentario, habilitada solo tras confirmar PIN. | M8 | Carrillo Villao Alex Antonio |
-| [ ] | 13 | **M11 (moderación). Gestión avanzada** | RF18, RF19 (completo) | Moderación del administrador: cancelación forzada de sesiones y eliminación de reseñas. | M6, M9 | - |
+| [ ] | 13 | **M11 (moderación). Gestión avanzada** | RF18, RF19 (completo) | Moderación del administrador: cancelación forzada de sesiones y eliminación de reseñas. | M6, M9 | Herrera Danny|
