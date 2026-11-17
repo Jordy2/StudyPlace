@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyPlace - Buscar Mentores</title>
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container navbar">
+      <a href="../index.html" class="logo"><span>StudyPlace</span></a>
+      <button class="menu-toggle" id="btn-menu-toggle" aria-label="Abrir menú">&#9776;</button>
+      <nav><ul class="nav-links" id="menu-navegacion"></ul></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <div><h1 class="page-title">Buscar Mentores</h1><p class="page-subtitle">Filtra mentores por materia y día de disponibilidad.</p></div>
+    </div>
+    <div id="alerta-busqueda" class="alert"></div>
+    <section class="search-filter">
+      <div class="form-group"><label class="form-label" for="buscar-materia">Materia</label><select class="form-select" id="buscar-materia"><option value="">Todas las materias</option></select></div>
+      <div class="form-group"><label class="form-label" for="buscar-dia">Día</label><select class="form-select" id="buscar-dia"><option value="">Cualquier día</option><option value="lunes">Lunes</option><option value="martes">Martes</option><option value="miercoles">Miércoles</option><option value="jueves">Jueves</option><option value="viernes">Viernes</option><option value="sabado">Sábado</option><option value="domingo">Domingo</option></select></div>
+    </section>
+    <section id="resultados-busqueda" class="mentor-grid"><p>Cargando mentores...</p></section>
+  </main>
+
+  <footer class="footer"><div class="container"><p>&copy; 2026 StudyPlace</p></div></footer>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/componentes/menu.js"></script>
+  <script src="../js/componentes/layout.js"></script>
+  <script src="../js/controladores/busquedaControlador.js"></script>
+</body>
+</html>
