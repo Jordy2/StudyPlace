@@ -15,20 +15,7 @@ Sistema web donde **estudiantes** pueden buscar **mentores** por materia y día,
 - Carrillo Villao Alex Antonio
 - Reyes Pozo Emily Lissette
 - Ronald Steven Baque Pérez
- 
-## Arquitectura
- 
-- **Frontend:** Se publica en GitHub Pages
-- **Backend:** PHP orientado a objetos, sin framework. Recibe peticiones, aplica las reglas y guarda en MySQL.
-- **Base de datos:** MySQL.
 
-### Roles
- 
-| Rol | Qué puede hacer | Requisitos asociados |
-|---|---|---|
-| Estudiante | Buscar mentores, solicitar reservas, confirmar asistencia con PIN, calificar con reseñas, ganar puntos (XP), desbloquear insignias y consultar rankings | RF1, RF2, RF4, RF5, RF9, RF10, RF13, RF14, RF20, RF21, RF22 |
-| Mentor | Configurar disponibilidad horaria, gestionar solicitudes (aceptar/rechazar), generar PIN de sesión, acumular horas de vinculación, ganar puntos e insignias | RF1, RF2, RF4, RF5, RF7, RF12, RF13, RF15, RF20, RF21 |
-| Administrador | Gestionar usuarios (suspender/reactivar/eliminar/cambio de rol), administrar catálogos (materias y espacios), moderar reservas y reseñas, y consultar auditoría. Se crea solo desde la base de datos | RF3, RF4, RF6, RF8, RF16, RF17, RF18, RF19 |
 
 ## Requisitos funcionales
 
@@ -80,6 +67,20 @@ Sistema web donde **estudiantes** pueden buscar **mentores** por materia y día,
   - **Controlador:** clases (`Controladores/`) que reciben la petición, llaman al servicio y devuelven la respuesta.
   - Los endpoints de `api/` solo instancian el controlador y lo ejecutan. Los servicios dependen de interfaces (`Contratos/`), no de clases concretas.
 - **RNF10. Autenticación entre dominios:** como el front (GitHub Pages) y la API están en dominios distintos, la sesión se maneja con un **token** que el front guarda y envía en el encabezado `Authorization`, en lugar de depender de cookies de `$_SESSION`. *(Decisión a confirmar en el módulo 1.)*
+ 
+## Arquitectura
+ 
+- **Frontend:** Se publica en GitHub Pages
+- **Backend:** PHP orientado a objetos, sin framework. Recibe peticiones, aplica las reglas y guarda en MySQL.
+- **Base de datos:** MySQL.
+
+## Roles
+ 
+| Rol | Qué puede hacer | Requisitos asociados |
+|---|---|---|
+| Estudiante | Buscar mentores, solicitar reservas, confirmar asistencia con PIN, calificar con reseñas, ganar puntos (XP), desbloquear insignias y consultar rankings | RF1, RF2, RF4, RF5, RF9, RF10, RF13, RF14, RF20, RF21, RF22 |
+| Mentor | Configurar disponibilidad horaria, gestionar solicitudes (aceptar/rechazar), generar PIN de sesión, acumular horas de vinculación, ganar puntos e insignias | RF1, RF2, RF4, RF5, RF7, RF12, RF13, RF15, RF20, RF21 |
+| Administrador | Gestionar usuarios (suspender/reactivar/eliminar/cambio de rol), administrar catálogos (materias y espacios), moderar reservas y reseñas, y consultar auditoría. Se crea solo desde la base de datos | RF3, RF4, RF6, RF8, RF16, RF17, RF18, RF19 |
 
 ## Estructura de carpetas
  
