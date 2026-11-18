@@ -113,23 +113,154 @@ a:hover {
   width: 1px;
   height: 1.5rem;
   background-color: var(--color-border);
-  margin: 0 0.5rem;
+  margin: 0 0.65rem;
 }
 
-.nav-user {
+/* Botón Avatar de Perfil en la barra de navegación */
+.nav-avatar-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.85rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  color: var(--color-text);
+  justify-content: center;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 2px;
+  transition: transform 0.15s ease;
 }
 
-.nav-user-nombre {
-  font-weight: 500;
+.nav-avatar-btn:hover {
+  text-decoration: none;
+  transform: scale(1.06);
+}
+
+.nav-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface));
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 2px solid var(--color-primary);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.nav-avatar-btn:hover .nav-avatar {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+.nav-avatar-btn.active .nav-avatar {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+/* Dropdown de usuario: Perfil y Mis Logros */
+.dropdown-container {
+  position: relative;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  right: 0;
+  min-width: 205px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 0;
+  display: none;
+  z-index: 100;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-dropdown-menu.open {
+  display: block;
+}
+
+.user-dropdown-header {
+  padding: 0.65rem 1rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropdown-user-name {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 0.4rem 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 1rem;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-item svg {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.dropdown-item:hover svg {
+  color: var(--color-primary);
+}
+
+.dropdown-item.active {
+  color: var(--color-primary);
+  font-weight: 600;
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.dropdown-item.active svg {
+  color: var(--color-primary);
+}
+
+/* Principio de Proximidad: distancia para el botón salir */
+.nav-item-logout {
+  margin-left: 0.25rem;
 }
 
 .nav-btn-logout {
@@ -137,6 +268,13 @@ a:hover {
   font-size: 0.8rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+
+.nav-btn-logout:hover {
+  border-color: var(--color-error);
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
 }
 
 .btn {
@@ -304,6 +442,68 @@ a:hover {
   text-align: center;
   font-size: 0.875rem;
   color: var(--color-text-muted);
+}
+
+/* Campos con Alternancia de Contraseña y Validación */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper .form-input {
+  padding-right: 2.75rem;
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 0.65rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-toggle-password:hover {
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.form-input.form-error {
+  border-color: var(--color-error) !important;
+}
+
+.form-input.form-error:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 25%, transparent) !important;
+}
+
+.form-input.form-success {
+  border-color: var(--color-success) !important;
+}
+
+.form-feedback {
+  display: block;
+  font-size: 0.775rem;
+  margin-top: 0.25rem;
+  min-height: 1.1rem;
+  transition: all 0.15s ease;
+}
+
+.form-feedback.error {
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+.form-feedback.success {
+  color: var(--color-success);
+  font-weight: 500;
 }
 
 /* --- Componentes Módulo 3: Catálogos y Diseño Base (RNF4) --- */
@@ -584,18 +784,50 @@ a:hover {
     padding: 0.65rem 0.85rem;
   }
 
+  .nav-item-profile {
+    width: 100%;
+  }
+
+  .dropdown-container {
+    width: 100%;
+  }
+
+  .nav-avatar-btn {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    border-radius: var(--radius);
+    padding: 0.5rem 0.85rem;
+  }
+
+  .nav-avatar-btn::after {
+    content: "Mi Cuenta";
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .user-dropdown-menu {
+    position: static;
+    margin-top: 0.4rem;
+    box-shadow: none;
+    border: 1px solid var(--color-border);
+    width: 100%;
+  }
+
+  .nav-item-divider {
+    width: 100%;
+  }
+
   .nav-divider {
     width: 100%;
     height: 1px;
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
   }
 
-  .nav-user {
-    width: 100%;
-    justify-content: space-between;
-    box-sizing: border-box;
-    border-radius: var(--radius);
-    padding: 0.6rem 0.85rem;
+  .nav-item-logout {
+    margin-left: 0;
+    margin-top: 0.25rem;
   }
 
   .nav-btn-logout {
@@ -604,6 +836,52 @@ a:hover {
 
   .table-actions {
     flex-direction: column;
+  }
+}
+
+/* --- Componentes Módulo 2: Perfil y Materias Dominadas (RF5) --- */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+  margin-bottom: 2rem;
+}
+
+.profile-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px color-mix(in srgb, var(--color-text) 4%, transparent);
+}
+
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface));
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 auto 1rem;
+  border: 2px solid var(--color-primary);
+}
+
+@media (max-width: 860px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
   }
 }
 

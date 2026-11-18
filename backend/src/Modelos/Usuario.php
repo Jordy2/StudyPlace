@@ -71,6 +71,26 @@ class Usuario {
     return $this->updatedAt;
   }
 
+  public function setNombre(string $nombre): void {
+    $this->nombre = $nombre;
+  }
+
+  public function setCorreo(string $correo): void {
+    $this->correo = $correo;
+  }
+
+  public function setPasswordHash(string $passwordHash): void {
+    $this->passwordHash = $passwordHash;
+  }
+
+  public function setSemestre(?int $semestre): void {
+    $this->semestre = $semestre;
+  }
+
+  public function setEstado(string $estado): void {
+    $this->estado = $estado;
+  }
+
   public function esActivo(): bool {
     return $this->estado === 'activo';
   }

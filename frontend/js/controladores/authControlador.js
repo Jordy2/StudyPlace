@@ -19,6 +19,34 @@ document.addEventListener('DOMContentLoaded', () => {
     boton.textContent = cargando ? 'Procesando...' : textoOriginal;
   }
 
+  // --- Funcionalidad común: Alternar Visibilidad de Contraseñas ---
+  function inicializarTogglePasswords() {
+    document.querySelectorAll('.btn-toggle-password').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        if (!input) return;
+
+        const esPassword = input.type === 'password';
+        input.type = esPassword ? 'text' : 'password';
+
+        const eyeOpen = btn.querySelector('.eye-open');
+        const eyeClosed = btn.querySelector('.eye-closed');
+        if (eyeOpen && eyeClosed) {
+          eyeOpen.style.display = esPassword ? 'none' : 'block';
+          eyeClosed.style.display = esPassword ? 'block' : 'none';
+        }
+
+        const estado = esPassword ? 'Ocultar contraseña' : 'Mostrar contraseña';
+        btn.setAttribute('aria-label', estado);
+        btn.setAttribute('title', estado);
+      });
+    });
+  }
+
+  inicializarTogglePasswords();
+
+  // --- Formulario de Login ---
   const formLogin = document.getElementById('form-login');
   if (formLogin) {
     const btnSubmit = document.getElementById('btn-submit');
@@ -65,41 +93,172 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Formulario de Registro con Validaciones en Tiempo Real ---
   const formRegistro = document.getElementById('form-registro');
   if (formRegistro) {
     const btnSubmit = document.getElementById('btn-submit');
     const rolSelect = document.getElementById('rol');
     const grupoSemestre = document.getElementById('grupo-semestre');
 
+    const inputNombre = document.getElementById('nombre');
+    const inputCorreo = document.getElementById('correo');
+    const inputSemestre = document.getElementById('semestre');
+    const inputPassword = document.getElementById('password');
+    const inputPasswordConfirm = document.getElementById('password_confirm');
+
+    function setFeedback(campoId, mensaje, tipo = 'error') {
+      const input = document.getElementById(campoId);
+      const feedback = document.getElementById(`feedback-${campoId}`);
+
+      if (input) {
+        input.classList.remove('form-error', 'form-success');
+        if (tipo === 'error') input.classList.add('form-error');
+        else if (tipo === 'success') input.classList.add('form-success');
+      }
+
+      if (feedback) {
+        feedback.textContent = mensaje || '';
+        feedback.className = `form-feedback ${tipo}`;
+      }
+    }
+
+    function limpiarFeedback(campoId) {
+      const input = document.getElementById(campoId);
+      const feedback = document.getElementById(`feedback-${campoId}`);
+      if (input) input.classList.remove('form-error', 'form-success');
+      if (feedback) {
+        feedback.textContent = '';
+        feedback.className = 'form-feedback';
+      }
+    }
+
+    function validarEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validarCoincidenciaContraseñas() {
+      const pass = inputPassword?.value || '';
+      const passConfirm = inputPasswordConfirm?.value || '';
+
+      if (pass.length === 0) {
+        limpiarFeedback('password');
+      } else if (pass.length < 8) {
+        setFeedback('password', `La contraseña debe tener al menos 8 caracteres (llevas ${pass.length})`, 'error');
+      } else {
+        setFeedback('password', '✓ Longitud de contraseña correcta', 'success');
+      }
+
+      if (passConfirm.length === 0) {
+        limpiarFeedback('password_confirm');
+      } else if (pass !== passConfirm) {
+        setFeedback('password_confirm', 'Las contraseñas ingresadas no coinciden', 'error');
+      } else if (pass.length < 8) {
+        setFeedback('password_confirm', 'Las contraseñas coinciden pero deben tener al menos 8 caracteres', 'error');
+      } else {
+        setFeedback('password_confirm', '✓ Las contraseñas coinciden', 'success');
+      }
+    }
+
+    // Escuchadores en tiempo real
+    inputNombre?.addEventListener('blur', () => {
+      const val = inputNombre.value.trim();
+      if (!val) {
+        setFeedback('nombre', 'El nombre completo es obligatorio', 'error');
+      } else {
+        limpiarFeedback('nombre');
+      }
+    });
+
+    inputCorreo?.addEventListener('input', () => {
+      const val = inputCorreo.value.trim();
+      if (!val) {
+        limpiarFeedback('correo');
+      } else if (!validarEmail(val)) {
+        setFeedback('correo', 'Ingresa un formato de correo válido (ej. usuario@universidad.edu.ec)', 'error');
+      } else {
+        setFeedback('correo', '✓ Formato de correo válido', 'success');
+      }
+    });
+
+    inputSemestre?.addEventListener('input', () => {
+      if (rolSelect.value !== 'estudiante') return;
+      const num = parseInt(inputSemestre.value, 10);
+      if (isNaN(num) || num < 1 || num > 12) {
+        setFeedback('semestre', 'El semestre debe ser un número entero entre 1 y 12', 'error');
+      } else {
+        limpiarFeedback('semestre');
+      }
+    });
+
+    inputPassword?.addEventListener('input', validarCoincidenciaContraseñas);
+    inputPasswordConfirm?.addEventListener('input', validarCoincidenciaContraseñas);
+
     if (rolSelect && grupoSemestre) {
       rolSelect.addEventListener('change', () => {
-        grupoSemestre.style.display = rolSelect.value === 'estudiante' ? 'flex' : 'none';
+        const esEstudiante = rolSelect.value === 'estudiante';
+        grupoSemestre.style.display = esEstudiante ? 'flex' : 'none';
+        if (!esEstudiante) {
+          limpiarFeedback('semestre');
+        }
       });
     }
 
+    // Validación al enviar el formulario
     formRegistro.addEventListener('submit', async (e) => {
       e.preventDefault();
       limpiarAlerta();
 
-      const nombre = document.getElementById('nombre')?.value.trim();
-      const correo = document.getElementById('correo')?.value.trim();
-      const rol = document.getElementById('rol')?.value;
-      const semestreInput = document.getElementById('semestre')?.value;
-      const password = document.getElementById('password')?.value;
-      const passwordConfirm = document.getElementById('password_confirm')?.value;
+      const nombre = inputNombre?.value.trim();
+      const correo = inputCorreo?.value.trim();
+      const rol = rolSelect?.value;
+      const semestreInput = inputSemestre?.value;
+      const password = inputPassword?.value;
+      const passwordConfirm = inputPasswordConfirm?.value;
 
-      if (!nombre || !correo || !rol || !password) {
-        mostrarAlerta('Por favor completa todos los campos requeridos.', 'error');
-        return;
+      let tieneErrores = false;
+      let primerCampoConError = null;
+
+      // 1. Validar nombre
+      if (!nombre) {
+        setFeedback('nombre', 'El nombre completo es obligatorio', 'error');
+        tieneErrores = true;
+        if (!primerCampoConError) primerCampoConError = inputNombre;
       }
 
-      if (password !== passwordConfirm) {
-        mostrarAlerta('Las contraseñas ingresadas no coinciden.', 'error');
-        return;
+      // 2. Validar correo
+      if (!correo || !validarEmail(correo)) {
+        setFeedback('correo', 'Ingresa un correo electrónico válido', 'error');
+        tieneErrores = true;
+        if (!primerCampoConError) primerCampoConError = inputCorreo;
       }
 
-      if (password.length < 8) {
-        mostrarAlerta('La contraseña debe tener al menos 8 caracteres.', 'error');
+      // 3. Validar semestre
+      if (rol === 'estudiante') {
+        const semestreNum = parseInt(semestreInput, 10);
+        if (isNaN(semestreNum) || semestreNum < 1 || semestreNum > 12) {
+          setFeedback('semestre', 'El semestre debe ser un número entre 1 y 12', 'error');
+          tieneErrores = true;
+          if (!primerCampoConError) primerCampoConError = inputSemestre;
+        }
+      }
+
+      // 4. Validar contraseña
+      if (!password || password.length < 8) {
+        setFeedback('password', 'La contraseña debe tener al menos 8 caracteres', 'error');
+        tieneErrores = true;
+        if (!primerCampoConError) primerCampoConError = inputPassword;
+      }
+
+      // 5. Validar confirmación de contraseña
+      if (!passwordConfirm || password !== passwordConfirm) {
+        setFeedback('password_confirm', 'Las contraseñas ingresadas no coinciden', 'error');
+        tieneErrores = true;
+        if (!primerCampoConError) primerCampoConError = inputPasswordConfirm;
+      }
+
+      if (tieneErrores) {
+        mostrarAlerta('Por favor corrige los campos señalados antes de continuar.', 'error');
+        if (primerCampoConError) primerCampoConError.focus();
         return;
       }
 
@@ -111,12 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       if (rol === 'estudiante') {
-        const semestreNum = parseInt(semestreInput, 10);
-        if (isNaN(semestreNum) || semestreNum < 1 || semestreNum > 12) {
-          mostrarAlerta('El semestre debe ser un número entero entre 1 y 12.', 'error');
-          return;
-        }
-        cuerpo.semestre = semestreNum;
+        cuerpo.semestre = parseInt(semestreInput, 10);
       }
 
       setBotonCargando(btnSubmit, true, 'Registrarme');

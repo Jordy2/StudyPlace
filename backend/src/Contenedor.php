@@ -8,19 +8,24 @@ use App\Contratos\EspacioRepositorioInterface;
 use App\Contratos\EspacioServicioInterface;
 use App\Contratos\MateriaRepositorioInterface;
 use App\Contratos\MateriaServicioInterface;
+use App\Contratos\MentorMateriaRepositorioInterface;
+use App\Contratos\PerfilServicioInterface;
 use App\Contratos\TokenRepositorioInterface;
 use App\Contratos\UsuarioRepositorioInterface;
 use App\Controladores\AutenticacionControlador;
 use App\Controladores\EspacioControlador;
 use App\Controladores\MateriaControlador;
+use App\Controladores\PerfilControlador;
 use App\Middleware\AutenticacionMiddleware;
 use App\Repositorios\EspacioRepositorio;
 use App\Repositorios\MateriaRepositorio;
+use App\Repositorios\MentorMateriaRepositorio;
 use App\Repositorios\TokenRepositorio;
 use App\Repositorios\UsuarioRepositorio;
 use App\Servicios\AutenticacionServicio;
 use App\Servicios\EspacioServicio;
 use App\Servicios\MateriaServicio;
+use App\Servicios\PerfilServicio;
 use PDO;
 
 class Contenedor {
@@ -38,6 +43,10 @@ class Contenedor {
   private ?EspacioRepositorioInterface $espacioRepo = null;
   private ?EspacioServicioInterface $espacioServicio = null;
   private ?EspacioControlador $espacioControlador = null;
+
+  private ?MentorMateriaRepositorioInterface $mentorMateriaRepo = null;
+  private ?PerfilServicioInterface $perfilServicio = null;
+  private ?PerfilControlador $perfilControlador = null;
 
   public function __construct(?PDO $pdo = null) {
     $this->pdo = $pdo;
@@ -155,5 +164,36 @@ class Contenedor {
     }
 
     return $this->espacioControlador;
+  }
+
+  public function obtenerMentorMateriaRepositorio(): MentorMateriaRepositorioInterface {
+    if ($this->mentorMateriaRepo === null) {
+      $this->mentorMateriaRepo = new MentorMateriaRepositorio($this->obtenerConexion());
+    }
+
+    return $this->mentorMateriaRepo;
+  }
+
+  public function obtenerPerfilServicio(): PerfilServicioInterface {
+    if ($this->perfilServicio === null) {
+      $this->perfilServicio = new PerfilServicio(
+        $this->obtenerUsuarioRepositorio(),
+        $this->obtenerMentorMateriaRepositorio(),
+        $this->obtenerMateriaRepositorio()
+      );
+    }
+
+    return $this->perfilServicio;
+  }
+
+  public function obtenerPerfilControlador(): PerfilControlador {
+    if ($this->perfilControlador === null) {
+      $this->perfilControlador = new PerfilControlador(
+        $this->obtenerPerfilServicio(),
+        $this->obtenerAutenticacionMiddleware()
+      );
+    }
+
+    return $this->perfilControlador;
   }
 }

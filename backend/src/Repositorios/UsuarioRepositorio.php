@@ -78,4 +78,35 @@ class UsuarioRepositorio implements UsuarioRepositorioInterface {
 
     return (int)$stmt->fetchColumn() > 0;
   }
+
+  public function existeOtroConCorreo(string $correo, int $idExcluir): bool {
+    $sql = 'SELECT COUNT(*) FROM usuarios WHERE correo = :correo AND id != :id';
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([
+      ':correo' => $correo,
+      ':id' => $idExcluir,
+    ]);
+
+    return (int)$stmt->fetchColumn() > 0;
+  }
+
+  public function actualizar(Usuario $usuario): bool {
+    $sql = 'UPDATE usuarios
+            SET nombre = :nombre,
+                correo = :correo,
+                password_hash = :password_hash,
+                semestre = :semestre,
+                estado = :estado
+            WHERE id = :id';
+
+    $stmt = $this->pdo->prepare($sql);
+    return $stmt->execute([
+      ':id' => $usuario->getId(),
+      ':nombre' => $usuario->getNombre(),
+      ':correo' => $usuario->getCorreo(),
+      ':password_hash' => $usuario->getPasswordHash(),
+      ':semestre' => $usuario->getSemestre(),
+      ':estado' => $usuario->getEstado(),
+    ]);
+  }
 }

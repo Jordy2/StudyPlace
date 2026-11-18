@@ -81,9 +81,25 @@ CREATE TABLE IF NOT EXISTS `espacios` (
 INSERT INTO `materias` (`codigo`, `nombre`, `descripcion`, `estado`)
 VALUES
   ('MAT-101', 'Cálculo Diferencial', 'Fundamentos de límites, derivadas y aplicaciones.', 'activo'),
-  ('PRG-201', 'Estructuras de Datos', 'Pilas, colas, listas enlazadas, árboles y grafos.', 'activo'),
-  ('BD-301', 'Bases de Datos Relacionales', 'Modelo relacional, SQL, normalización y transacciones.', 'activo')
-ON DUPLICATE KEY UPDATE `nombre` = VALUES(`nombre`);
+  ('MAT-102', 'Cálculo Integral y Vectorial', 'Integrales definidas, métodos de integración y cálculo multivariable.', 'activo'),
+  ('MAT-103', 'Álgebra Lineal', 'Matrices, determinantes, espacios vectoriales y transformaciones lineales.', 'activo'),
+  ('MAT-201', 'Ecuaciones Diferenciales', 'Ecuaciones diferenciales ordinarias, modelado y transformadas de Laplace.', 'activo'),
+  ('PRG-101', 'Fundamentos de Programación', 'Lógica algorítmica, estructuras de control, tipos de datos y modularidad.', 'activo'),
+  ('PRG-201', 'Estructuras de Datos y Algoritmos', 'Pilas, colas, listas enlazadas, árboles binarios, grafos y complejidad.', 'activo'),
+  ('PRG-301', 'Programación Orientada a Objetos', 'Clases, encapsulamiento, herencia, polimorfismo y patrones de diseño.', 'activo'),
+  ('PRG-401', 'Desarrollo y Programación Web', 'Arquitectura frontend y backend, consumo de APIs REST, autenticación y JS moderno.', 'activo'),
+  ('BD-301', 'Bases de Datos Relacionales', 'Modelo relacional, SQL, normalización, índices y transacciones ACID.', 'activo'),
+  ('BD-401', 'Bases de Datos Avanzadas y NoSQL', 'Modelos NoSQL de documentos, clave-valor, grafos y alta disponibilidad.', 'activo'),
+  ('FIS-101', 'Física General y Mecánica', 'Cinemática, dinámica, leyes de Newton, trabajo, energía y cantidad de movimiento.', 'activo'),
+  ('EST-201', 'Probabilidad y Estadística', 'Estadística descriptiva, distribuciones probabilísticas e inferencia estadística.', 'activo'),
+  ('RED-301', 'Redes de Comunicación', 'Modelo OSI y TCP/IP, direccionamiento IPv4/IPv6, enrutamiento y conmutación.', 'activo'),
+  ('SO-201', 'Sistemas Operativos', 'Gestión de procesos, sincronización, memoria virtual y sistemas de archivos.', 'activo'),
+  ('ING-401', 'Ingeniería y Arquitectura de Software', 'Metodologías ágiles, ciclo de vida del software, diagramas UML y calidad.', 'activo'),
+  ('IA-501', 'Inteligencia Artificial y Machine Learning', 'Búsqueda heurística, aprendizaje supervisado, redes neuronales y visión artificial.', 'activo')
+ON DUPLICATE KEY UPDATE
+  `nombre` = VALUES(`nombre`),
+  `descripcion` = VALUES(`descripcion`),
+  `estado` = 'activo';
 
 -- Datos semilla iniciales para espacios (RF8)
 INSERT INTO `espacios` (`nombre`, `tipo`, `capacidad`, `ubicacion`, `enlace_virtual`, `estado`)
@@ -93,4 +109,19 @@ VALUES
   ('Sala Virtual Google Meet 1', 'virtual', NULL, NULL, 'https://meet.google.com/abc-defg-hij', 'activo'),
   ('Sala Virtual Zoom Académica', 'virtual', NULL, NULL, 'https://zoom.us/j/1234567890', 'activo')
 ON DUPLICATE KEY UPDATE `nombre` = VALUES(`nombre`);
+
+-- Tabla de materias dominadas por mentores (RF5)
+CREATE TABLE IF NOT EXISTS `mentor_materias` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `usuario_id` INT NOT NULL,
+  `materia_id` INT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_mentor_materia` (`usuario_id`, `materia_id`),
+  INDEX `idx_mentor_materias_usuario` (`usuario_id`),
+  INDEX `idx_mentor_materias_materia` (`materia_id`),
+  CONSTRAINT `fk_mentor_materias_usuario` FOREIGN KEY (`usuario_id`)
+    REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_mentor_materias_materia` FOREIGN KEY (`materia_id`)
+    REFERENCES `materias` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
