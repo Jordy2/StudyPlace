@@ -4,6 +4,8 @@ namespace App;
 
 use App\Config\Conexion;
 use App\Contratos\AutenticacionServicioInterface;
+use App\Contratos\DisponibilidadRepositorioInterface;
+use App\Contratos\DisponibilidadServicioInterface;
 use App\Contratos\EspacioRepositorioInterface;
 use App\Contratos\EspacioServicioInterface;
 use App\Contratos\MateriaRepositorioInterface;
@@ -13,16 +15,19 @@ use App\Contratos\PerfilServicioInterface;
 use App\Contratos\TokenRepositorioInterface;
 use App\Contratos\UsuarioRepositorioInterface;
 use App\Controladores\AutenticacionControlador;
+use App\Controladores\DisponibilidadControlador;
 use App\Controladores\EspacioControlador;
 use App\Controladores\MateriaControlador;
 use App\Controladores\PerfilControlador;
 use App\Middleware\AutenticacionMiddleware;
+use App\Repositorios\DisponibilidadRepositorio;
 use App\Repositorios\EspacioRepositorio;
 use App\Repositorios\MateriaRepositorio;
 use App\Repositorios\MentorMateriaRepositorio;
 use App\Repositorios\TokenRepositorio;
 use App\Repositorios\UsuarioRepositorio;
 use App\Servicios\AutenticacionServicio;
+use App\Servicios\DisponibilidadServicio;
 use App\Servicios\EspacioServicio;
 use App\Servicios\MateriaServicio;
 use App\Servicios\PerfilServicio;
@@ -47,6 +52,10 @@ class Contenedor {
   private ?MentorMateriaRepositorioInterface $mentorMateriaRepo = null;
   private ?PerfilServicioInterface $perfilServicio = null;
   private ?PerfilControlador $perfilControlador = null;
+
+  private ?DisponibilidadRepositorioInterface $disponibilidadRepo = null;
+  private ?DisponibilidadServicioInterface $disponibilidadServicio = null;
+  private ?DisponibilidadControlador $disponibilidadControlador = null;
 
   public function __construct(?PDO $pdo = null) {
     $this->pdo = $pdo;
@@ -195,5 +204,35 @@ class Contenedor {
     }
 
     return $this->perfilControlador;
+  }
+
+  public function obtenerDisponibilidadRepositorio(): DisponibilidadRepositorioInterface {
+    if ($this->disponibilidadRepo === null) {
+      $this->disponibilidadRepo = new DisponibilidadRepositorio($this->obtenerConexion());
+    }
+
+    return $this->disponibilidadRepo;
+  }
+
+  public function obtenerDisponibilidadServicio(): DisponibilidadServicioInterface {
+    if ($this->disponibilidadServicio === null) {
+      $this->disponibilidadServicio = new DisponibilidadServicio(
+        $this->obtenerDisponibilidadRepositorio(),
+        $this->obtenerMateriaRepositorio()
+      );
+    }
+
+    return $this->disponibilidadServicio;
+  }
+
+  public function obtenerDisponibilidadControlador(): DisponibilidadControlador {
+    if ($this->disponibilidadControlador === null) {
+      $this->disponibilidadControlador = new DisponibilidadControlador(
+        $this->obtenerDisponibilidadServicio(),
+        $this->obtenerAutenticacionMiddleware()
+      );
+    }
+
+    return $this->disponibilidadControlador;
   }
 }
