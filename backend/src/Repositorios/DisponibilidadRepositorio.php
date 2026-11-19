@@ -11,9 +11,8 @@ class DisponibilidadRepositorio implements DisponibilidadRepositorioInterface {
 
   public function obtenerPorMentor(int $mentorId): array {
     $stmt = $this->pdo->prepare(
-      'SELECT d.*, m.nombre AS materia_nombre, m.codigo AS materia_codigo
+      'SELECT d.*
        FROM disponibilidad_mentor d
-       JOIN materias m ON m.id = d.materia_id
        WHERE d.mentor_id = :mentor AND d.estado = "activo"
        ORDER BY FIELD(d.dia_semana, "lunes","martes","miercoles","jueves","viernes","sabado","domingo"), d.hora_inicio'
     );
@@ -22,18 +21,19 @@ class DisponibilidadRepositorio implements DisponibilidadRepositorioInterface {
   }
 
   public function buscarPorId(int $id): ?Disponibilidad {
-    $stmt = $this->pdo->prepare('SELECT d.*, m.nombre AS materia_nombre, m.codigo AS materia_codigo FROM disponibilidad_mentor d JOIN materias m ON m.id = d.materia_id WHERE d.id = :id');
+    $stmt = $this->pdo->prepare('SELECT d.* FROM disponibilidad_mentor d WHERE d.id = :id');
     $stmt->execute([':id' => $id]);
     $fila = $stmt->fetch();
     return $fila ? Disponibilidad::fromArray($fila) : null;
   }
 
   public function crear(Disponibilidad $d): Disponibilidad {
-    $stmt = $this->pdo->prepare('INSERT INTO disponibilidad_mentor (mentor_id,materia_id,dia_semana,hora_inicio,hora_fin,estado) VALUES (:mentor,:materia,:dia,:inicio,:fin,:estado)');
+    $data = $d->toArray();
+    $stmt = $this->pdo->prepare('INSERT INTO disponibilidad_mentor (mentor_id,dia_semana,hora_inicio,hora_fin,estado) VALUES (:mentor,:dia,:inicio,:fin,:estado)');
     $stmt->execute([
-      ':mentor' => $d->getMentorId(), ':materia' => $d->getMateriaId(),
-      ':dia' => $d->toArray()['dia_semana'], ':inicio' => $d->toArray()['hora_inicio'],
-      ':fin' => $d->toArray()['hora_fin'], ':estado' => 'activo'
+      ':mentor' => $d->getMentorId(), ':dia' => $data['dia_semana'],
+      ':inicio' => $data['hora_inicio'], ':fin' => $data['hora_fin'],
+      ':estado' => $data['estado']
     ]);
     $id = (int)$this->pdo->lastInsertId();
     return $this->buscarPorId($id);
@@ -41,10 +41,9 @@ class DisponibilidadRepositorio implements DisponibilidadRepositorioInterface {
 
   public function actualizar(Disponibilidad $d): bool {
     $data = $d->toArray();
-    $stmt = $this->pdo->prepare('UPDATE disponibilidad_mentor SET materia_id=:materia,dia_semana=:dia,hora_inicio=:inicio,hora_fin=:fin,estado=:estado WHERE id=:id');
+    $stmt = $this->pdo->prepare('UPDATE disponibilidad_mentor SET dia_semana=:dia,hora_inicio=:inicio,hora_fin=:fin,estado=:estado WHERE id=:id');
     return $stmt->execute([
-      ':materia' => $d->getMateriaId(), ':dia' => $data['dia_semana'],
-      ':inicio' => $data['hora_inicio'], ':fin' => $data['hora_fin'],
+      ':dia' => $data['dia_semana'], ':inicio' => $data['hora_inicio'], ':fin' => $data['hora_fin'],
       ':estado' => $data['estado'], ':id' => $d->getId()
     ]);
   }
@@ -70,15 +69,18 @@ class DisponibilidadRepositorio implements DisponibilidadRepositorioInterface {
   }
 
   public function buscarMentores(?int $materiaId, ?string $dia): array {
-    $sql = 'SELECT u.id,u.nombre,u.correo,u.semestre,m.id AS materia_id,m.codigo AS materia_codigo,m.nombre AS materia_nombre,
-                   d.dia_semana,d.hora_inicio,d.hora_fin
-            FROM disponibilidad_mentor d
-            JOIN usuarios u ON u.id=d.mentor_id
-            JOIN materias m ON m.id=d.materia_id
-            WHERE u.rol="mentor" AND u.estado="activo" AND d.estado="activo" AND m.estado="activo"';
+    $sql = 'SELECT u.id,u.nombre,u.correo,u.semestre,
+                   m.id AS materia_id,m.codigo AS materia_codigo,m.nombre AS materia_nombre,
+                   d.id AS disponibilidad_id,d.dia_semana,d.hora_inicio,d.hora_fin
+            FROM usuarios u
+            JOIN mentor_materias mm ON mm.usuario_id=u.id
+            JOIN materias m ON m.id=mm.materia_id
+            JOIN disponibilidad_mentor d ON d.mentor_id=u.id
+            WHERE u.rol="mentor" AND u.estado="activo"
+              AND d.estado="activo" AND m.estado="activo"';
     $params = [];
     if ($materiaId !== null) {
-      $sql .= ' AND d.materia_id=:materia';
+      $sql .= ' AND mm.materia_id=:materia';
       $params[':materia'] = $materiaId;
     }
     if ($dia !== null) {

@@ -32,11 +32,11 @@ Sistema web donde **estudiantes** pueden buscar **mentores** por materia y día,
 
 ### Catálogo y horarios
 - **RF6.** Catálogo de materias con código único. Solo el administrador crea, edita y elimina; los demás roles consultan.
-- **RF7.** Configuración de horarios disponibles por mentor (día, hora de inicio y fin).
+- **RF7.** Configuración de franjas generales de disponibilidad por mentor (día, hora de inicio y fin). Las materias que domina se gestionan en el perfil (RF5), no se repiten en cada franja horaria.
 - **RF8.** Catálogo de espacios: aulas físicas (con capacidad) y salas virtuales (enlace externo). Solo el administrador crea, edita y elimina; los demás roles consultan.
 
 ### Búsqueda
-- **RF9.** Búsqueda de mentores filtrando por materia y día, sin recargar la página.
+- **RF9.** Búsqueda de mentores filtrando por las materias dominadas de su perfil (RF5) y sus días disponibles (RF7), sin recargar la página.
 
 ### Reservas
 - **RF10.** Reserva de sesiones individuales o grupales con cupo máximo.
@@ -73,6 +73,10 @@ Sistema web donde **estudiantes** pueden buscar **mentores** por materia y día,
 - **Frontend:** Se publica en GitHub Pages
 - **Backend:** PHP orientado a objetos, sin framework. Recibe peticiones, aplica las reglas y guarda en MySQL.
 - **Base de datos:** MySQL.
+
+### Actualizar una base de datos existente
+
+Si la base ya tenía la versión anterior de `disponibilidad_mentor` vinculada a materias, ejecuta una sola vez `database/migraciones/002_disponibilidad_general.sql` después de actualizar el código. La migración conserva una copia de la tabla anterior en `disponibilidad_mentor_legado`. Si los datos de las materias muestran signos `?` en lugar de tildes, ejecuta `database/migraciones/003_corregir_tildes_materias.sql`; esta corrección de datos es repetible y no cambia el esquema. Para una instalación nueva, usa `database/script.sql`.
 
 ## Roles
  

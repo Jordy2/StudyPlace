@@ -24,18 +24,33 @@ class BusquedaControlador {
             'nombre' => $fila['nombre'],
             'correo' => $fila['correo'],
             'semestre' => $fila['semestre'],
+            'materias' => [],
             'horarios' => [],
           ];
         }
-        $agrupados[$id]['horarios'][] = [
-          'materia_id' => (int)$fila['materia_id'],
-          'materia_codigo' => $fila['materia_codigo'],
-          'materia_nombre' => $fila['materia_nombre'],
+
+        $materiaId = (int)$fila['materia_id'];
+        $agrupados[$id]['materias'][$materiaId] = [
+          'id' => $materiaId,
+          'codigo' => $fila['materia_codigo'],
+          'nombre' => $fila['materia_nombre'],
+        ];
+
+        $disponibilidadId = (int)$fila['disponibilidad_id'];
+        $agrupados[$id]['horarios'][$disponibilidadId] = [
+          'id' => $disponibilidadId,
           'dia_semana' => $fila['dia_semana'],
           'hora_inicio' => substr($fila['hora_inicio'], 0, 5),
           'hora_fin' => substr($fila['hora_fin'], 0, 5),
         ];
       }
+
+      foreach ($agrupados as &$mentor) {
+        $mentor['materias'] = array_values($mentor['materias']);
+        $mentor['horarios'] = array_values($mentor['horarios']);
+      }
+      unset($mentor);
+
       respuestaJson(true, array_values($agrupados), 200);
     } catch (InvalidArgumentException $e) {
       respuestaError($e->getMessage(), 400);

@@ -129,7 +129,6 @@ CREATE TABLE IF NOT EXISTS `mentor_materias` (
 CREATE TABLE IF NOT EXISTS `disponibilidad_mentor` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
-  `materia_id` INT NOT NULL,
   `dia_semana` ENUM('lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo') NOT NULL,
   `hora_inicio` TIME NOT NULL,
   `hora_fin` TIME NOT NULL,
@@ -138,9 +137,6 @@ CREATE TABLE IF NOT EXISTS `disponibilidad_mentor` (
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX `idx_disponibilidad_mentor` (`mentor_id`),
   INDEX `idx_disponibilidad_dia` (`dia_semana`),
-  INDEX `idx_disponibilidad_materia` (`materia_id`),
   CONSTRAINT `fk_disponibilidad_mentor`
-    FOREIGN KEY (`mentor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_disponibilidad_materia`
-    FOREIGN KEY (`materia_id`) REFERENCES `materias` (`id`) ON DELETE CASCADE
+    FOREIGN KEY (`mentor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

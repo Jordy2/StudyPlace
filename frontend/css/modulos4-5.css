@@ -1,0 +1,185 @@
+.module-main {
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.module-panel {
+  padding: 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+}
+
+.module-heading {
+  margin-bottom: 1.25rem;
+}
+
+.module-heading h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.module-heading > p {
+  margin-top: 0.3rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.module-heading .module-help {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+}
+
+.availability-editor {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f1f5f9;
+  border-radius: var(--radius);
+}
+
+.availability-fields {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr 1fr auto;
+  align-items: end;
+  gap: 0.9rem;
+}
+
+.availability-fields .form-group {
+  margin-bottom: 0;
+}
+
+.availability-form-actions,
+.availability-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.availability-form-actions .btn {
+  min-height: 2.5rem;
+  white-space: nowrap;
+}
+
+.availability-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.availability-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.1rem;
+  padding: 0.6rem 0.9rem;
+  background: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.availability-empty,
+.search-message {
+  grid-column: 1 / -1;
+  padding: 1rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.search-filter {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.search-filter .form-group {
+  margin-bottom: 0;
+}
+
+.mentor-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 0;
+}
+
+.mentor-card {
+  padding: 1.1rem;
+}
+
+.mentor-card h3 {
+  margin-bottom: 0.25rem;
+  font-size: 1.05rem;
+}
+
+.mentor-description {
+  margin-bottom: 0.8rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.mentor-card h4 {
+  margin: 0.65rem 0 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.mentor-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.mentor-tag {
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  border-radius: 0.35rem;
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.mentor-tag-materia {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.mentor-tag-horario {
+  background: #dcfce7;
+  color: #047857;
+}
+
+@media (max-width: 720px) {
+  .availability-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .availability-form-actions {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .module-main {
+    padding-top: 1rem;
+  }
+
+  .module-panel {
+    padding: 1rem;
+  }
+
+  .availability-fields,
+  .search-filter,
+  .mentor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .availability-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
