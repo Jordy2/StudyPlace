@@ -1,55 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StudyPlace - Buscar Mentores</title>
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/modulos4-5.css">
-</head>
-<body>
-  <header class="header">
-    <div class="container navbar">
-      <a href="../index.html" class="logo"><span>StudyPlace</span></a>
-      <button class="menu-toggle" id="btn-menu-toggle" aria-label="Abrir menú">&#9776;</button>
-      <nav><ul class="nav-links" id="menu-navegacion"></ul></nav>
-    </div>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Busca mentores académicos por materia y día de disponibilidad en StudyPlace."
+    />
+    <title>StudyPlace - Buscar Mentores</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/modulos4-5.css" />
+  </head>
+  <body>
+    <a href="#contenido-principal" class="skip-link">Saltar al contenido</a>
 
-  <main class="container module-main">
-    <section class="module-panel">
-      <div class="module-heading">
-        <h1>Buscar mentores académicos</h1>
-        <p>Filtra mentores combinando materias del perfil (M2) y disponibilidad (M4) sin recargar la página.</p>
+    <header class="header">
+      <div class="container navbar">
+        <a href="../index.html" class="logo"><span>StudyPlace</span></a>
+        <button
+          class="menu-toggle"
+          id="btn-menu-toggle"
+          type="button"
+          aria-label="Abrir menú"
+          aria-controls="menu-navegacion"
+          aria-expanded="false"
+        >
+          &#9776;
+        </button>
+        <nav aria-label="Navegación principal">
+          <ul class="nav-links" id="menu-navegacion"></ul>
+        </nav>
       </div>
-      <div id="alerta-busqueda" class="alert" role="alert" aria-live="polite"></div>
-      <section class="search-filter" aria-label="Filtros de búsqueda">
-        <div class="form-group">
-          <label class="form-label" for="buscar-materia">Materia requerida</label>
-          <select class="form-select" id="buscar-materia"><option value="">-- Todas las materias --</option></select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="buscar-dia">Día de la semana</label>
-          <select class="form-select" id="buscar-dia">
-            <option value="">-- Cualquier día --</option>
-            <option value="lunes">Lunes</option><option value="martes">Martes</option>
-            <option value="miercoles">Miércoles</option><option value="jueves">Jueves</option>
-            <option value="viernes">Viernes</option><option value="sabado">Sábado</option>
-            <option value="domingo">Domingo</option>
-          </select>
-        </div>
-      </section>
-      <section id="resultados-busqueda" class="mentor-grid" aria-live="polite">
-        <p class="search-message">Cargando mentores...</p>
-      </section>
-    </section>
-  </main>
+    </header>
 
-  <footer class="footer"><div class="container"><p>&copy; 2026 StudyPlace</p></div></footer>
-  <script src="../js/config.js"></script>
-  <script src="../js/api.js"></script>
-  <script src="../js/componentes/menu.js"></script>
-  <script src="../js/componentes/layout.js"></script>
-  <script src="../js/controladores/busquedaControlador.js"></script>
-</body>
+    <main id="contenido-principal" class="container module-main">
+      <section class="module-panel" aria-labelledby="titulo-busqueda">
+        <div class="module-heading">
+          <h1 id="titulo-busqueda">Buscar mentores académicos</h1>
+          <p>
+            Filtra mentores combinando materias del perfil (M2) y disponibilidad
+            (M4) sin recargar la página.
+          </p>
+        </div>
+
+        <div
+          id="alerta-busqueda"
+          class="alert"
+          role="alert"
+          aria-live="polite"
+        ></div>
+
+        <form
+          class="search-filter"
+          role="search"
+          aria-label="Filtros de búsqueda"
+          onsubmit="return false;"
+        >
+          <div class="form-group">
+            <label class="form-label" for="buscar-materia"
+              >Materia requerida</label
+            >
+            <select class="form-select" id="buscar-materia">
+              <option value="">-- Todas las materias --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="buscar-dia">Día de la semana</label>
+            <select class="form-select" id="buscar-dia">
+              <option value="">-- Cualquier día --</option>
+              <option value="lunes">Lunes</option>
+              <option value="martes">Martes</option>
+              <option value="miercoles">Miércoles</option>
+              <option value="jueves">Jueves</option>
+              <option value="viernes">Viernes</option>
+              <option value="sabado">Sábado</option>
+              <option value="domingo">Domingo</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <button type="button" class="btn" id="btn-limpiar-filtros">
+              Limpiar filtros
+            </button>
+          </div>
+        </form>
+
+        <p id="contador-resultados" class="search-count" aria-live="polite"></p>
+
+        <section
+          id="resultados-busqueda"
+          class="mentor-grid"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <p class="search-message">Cargando mentores...</p>
+        </section>
+
+        <noscript
+          ><p class="search-message">
+            Necesitas activar JavaScript para buscar mentores.
+          </p></noscript
+        >
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container"><p>&copy; 2026 StudyPlace</p></div>
+    </footer>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/componentes/menu.js"></script>
+    <script src="../js/componentes/layout.js"></script>
+    <script src="../js/controladores/busquedaControlador.js"></script>
+  </body>
 </html>
