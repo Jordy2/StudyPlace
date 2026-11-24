@@ -20,14 +20,10 @@ class DisponibilidadServicio implements DisponibilidadServicioInterface {
 
   private function validarDatos(int $mentorId, array $datos, ?int $excluirId = null): array {
     $dias = ['lunes','martes','miercoles','jueves','viernes','sabado','domingo'];
-    $materiaId = (int)($datos['materia_id'] ?? 0);
     $dia = strtolower(trim($datos['dia_semana'] ?? ''));
     $inicio = trim($datos['hora_inicio'] ?? '');
     $fin = trim($datos['hora_fin'] ?? '');
 
-    if ($materiaId <= 0 || $this->materiaRepo->buscarPorId($materiaId) === null) {
-      throw new InvalidArgumentException('La materia seleccionada no existe.');
-    }
     if (!in_array($dia, $dias, true)) {
       throw new InvalidArgumentException('El día seleccionado no es válido.');
     }
@@ -42,12 +38,12 @@ class DisponibilidadServicio implements DisponibilidadServicioInterface {
       throw new InvalidArgumentException('El horario se cruza con otra disponibilidad del mentor.');
     }
 
-    return [$materiaId, $dia, $inicio, $fin];
+    return [$dia, $inicio, $fin];
   }
 
   public function crear(int $mentorId, array $datos): Disponibilidad {
-    [$materiaId, $dia, $inicio, $fin] = $this->validarDatos($mentorId, $datos);
-    $d = new Disponibilidad(null, $mentorId, $materiaId, $dia, $inicio, $fin);
+    [$dia, $inicio, $fin] = $this->validarDatos($mentorId, $datos);
+    $d = new Disponibilidad(null, $mentorId, $dia, $inicio, $fin);
     return $this->disponibilidadRepo->crear($d);
   }
 
@@ -58,13 +54,12 @@ class DisponibilidadServicio implements DisponibilidadServicioInterface {
     }
     $data = $existente->toArray();
     $datosCompletos = [
-      'materia_id' => $datos['materia_id'] ?? $data['materia_id'],
       'dia_semana' => $datos['dia_semana'] ?? $data['dia_semana'],
       'hora_inicio' => $datos['hora_inicio'] ?? $data['hora_inicio'],
       'hora_fin' => $datos['hora_fin'] ?? $data['hora_fin'],
     ];
-    [$materiaId, $dia, $inicio, $fin] = $this->validarDatos($mentorId, $datosCompletos, $id);
-    $d = new Disponibilidad($id, $mentorId, $materiaId, $dia, $inicio, $fin);
+    [$dia, $inicio, $fin] = $this->validarDatos($mentorId, $datosCompletos, $id);
+    $d = new Disponibilidad($id, $mentorId, $dia, $inicio, $fin);
     $this->disponibilidadRepo->actualizar($d);
     return $this->disponibilidadRepo->buscarPorId($id);
   }

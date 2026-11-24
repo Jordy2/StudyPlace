@@ -39,17 +39,26 @@ const BusquedaControlador = {
   renderizar(mentores) {
     const contenedor = document.getElementById('resultados-busqueda');
     if (!mentores.length) {
-      contenedor.innerHTML = '<p>No se encontraron mentores con esos filtros.</p>';
+      contenedor.innerHTML = '<p class="search-message">No se encontraron mentores con esos filtros.</p>';
       return;
     }
-    contenedor.innerHTML = mentores.map((m) => `
-      <article class="mentor-card">
-        <h3>${this.escape(m.nombre)}</h3>
-        <p class="page-subtitle">${m.semestre ? `Semestre ${m.semestre}` : 'Mentor académico'}</p>
-        <ul class="mentor-horarios">${m.horarios.map((h) =>
-          `<li><strong>${this.escape(h.materia_codigo)} - ${this.escape(h.materia_nombre)}</strong><br>${this.capitalize(h.dia_semana)}: ${h.hora_inicio} a ${h.hora_fin}</li>`
-        ).join('')}</ul>
-      </article>`).join('');
+    contenedor.innerHTML = mentores.map((m) => {
+      const materias = (m.materias || []).map((materia) =>
+        `<span class="mentor-tag mentor-tag-materia">${this.escape(materia.codigo)} - ${this.escape(materia.nombre)}</span>`
+      ).join('');
+      const horarios = (m.horarios || []).map((h) =>
+        `<span class="mentor-tag mentor-tag-horario">${this.capitalize(this.escape(h.dia_semana))}: ${this.escape(h.hora_inicio)} - ${this.escape(h.hora_fin)}</span>`
+      ).join('');
+      return `
+        <article class="mentor-card">
+          <h3>${this.escape(m.nombre)}</h3>
+          <p class="mentor-description">${m.semestre ? `Semestre ${this.escape(String(m.semestre))}` : 'Mentor académico'}</p>
+          <h4>Materias que domina (M2):</h4>
+          <div class="mentor-tags">${materias}</div>
+          <h4>Disponibilidad (M4):</h4>
+          <div class="mentor-tags">${horarios}</div>
+        </article>`;
+    }).join('');
   },
 
   mostrarError(mensaje) {
