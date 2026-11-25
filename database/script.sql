@@ -141,42 +141,19 @@ CREATE TABLE IF NOT EXISTS `disponibilidad_mentor` (
     FOREIGN KEY (`mentor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Reglas de puntos XP por acción (RF20)
-CREATE TABLE IF NOT EXISTS `reglas_puntos` (
+-- Registro de auditoría de acciones del administrador (RF19 base, RNF7)
+CREATE TABLE IF NOT EXISTS `auditoria_admin` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `accion` VARCHAR(50) NOT NULL UNIQUE,
-  `descripcion` VARCHAR(150) NOT NULL,
-  `puntos` INT NOT NULL,
-  `estado` ENUM('activo', 'inactivo') NOT NULL DEFAULT 'activo',
-  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Historial de XP ganado. El UNIQUE evita puntos duplicados (RNF8)
-CREATE TABLE IF NOT EXISTS `historial_xp` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `usuario_id` INT NOT NULL,
+  `admin_id` INT NOT NULL,
   `accion` VARCHAR(50) NOT NULL,
-  `referencia` VARCHAR(50) NOT NULL DEFAULT '',
-  `puntos` INT NOT NULL,
+  `usuario_afectado_id` INT NULL,
+  `detalle` VARCHAR(255) NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `uk_xp_unico` (`usuario_id`, `accion`, `referencia`),
-  INDEX `idx_historial_xp_usuario` (`usuario_id`),
-  CONSTRAINT `fk_historial_xp_usuario` FOREIGN KEY (`usuario_id`)
-    REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_historial_xp_accion` FOREIGN KEY (`accion`)
-    REFERENCES `reglas_puntos` (`accion`)
+  INDEX `idx_auditoria_admin` (`admin_id`),
+  INDEX `idx_auditoria_afectado` (`usuario_afectado_id`),
+  INDEX `idx_auditoria_fecha` (`created_at`),
+  CONSTRAINT `fk_auditoria_admin` FOREIGN KEY (`admin_id`)
+    REFERENCES `usuarios` (`id`),
+  CONSTRAINT `fk_auditoria_afectado` FOREIGN KEY (`usuario_afectado_id`)
+    REFERENCES `usuarios` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `reglas_puntos` (`accion`, `descripcion`, `puntos`)
-VALUES
-  ('completar_perfil', 'Completar el perfil', 50),
-  ('configurar_disponibilidad', 'Configurar disponibilidad horaria', 30),
-  ('solicitar_sesion', 'Solicitar una sesión', 10),
-  ('asistir_sesion', 'Asistir a una sesión', 25),
-  ('dictar_sesion', 'Dictar una sesión', 40),
-  ('dejar_resena', 'Dejar una reseña', 10),
-  ('recibir_resena', 'Recibir una reseña', 15)
-ON DUPLICATE KEY UPDATE
-  `descripcion` = VALUES(`descripcion`),
-  `puntos` = VALUES(`puntos`);
