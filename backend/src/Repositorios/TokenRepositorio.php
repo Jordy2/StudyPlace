@@ -47,4 +47,10 @@ class TokenRepositorio implements TokenRepositorioInterface {
     $stmt = $this->pdo->prepare($sql);
     return $stmt->execute([':token' => $token]);
   }
+
+  public function eliminarTokensDeUsuario(int $usuarioId): bool {
+    $sql = 'DELETE FROM tokens_sesion WHERE usuario_id = :usuario_id';
+    $stmt = $this->pdo->prepare($sql);
+    return $stmt->execute([':usuario_id' => $usuarioId]);
+  }
 }

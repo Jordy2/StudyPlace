@@ -109,4 +109,44 @@ class UsuarioRepositorio implements UsuarioRepositorioInterface {
       ':estado' => $usuario->getEstado(),
     ]);
   }
+
+  public function listar(array $filtros = []): array {
+    $sql = 'SELECT id, nombre, correo, rol, semestre, estado, created_at, updated_at
+            FROM usuarios
+            WHERE 1 = 1';
+    $params = [];
+
+    if (!empty($filtros['rol'])) {
+      $sql .= ' AND rol = :rol';
+      $params[':rol'] = $filtros['rol'];
+    }
+
+    if (!empty($filtros['estado'])) {
+      $sql .= ' AND estado = :estado';
+      $params[':estado'] = $filtros['estado'];
+    }
+
+    if (!empty($filtros['q'])) {
+      $sql .= ' AND (nombre LIKE :q_nombre OR correo LIKE :q_correo)';
+      $params[':q_nombre'] = '%' . $filtros['q'] . '%';
+      $params[':q_correo'] = '%' . $filtros['q'] . '%';
+    }
+
+    $sql .= ' ORDER BY created_at DESC, id DESC LIMIT 500';
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll();
+  }
+
+  public function actualizarRol(int $id, string $rol): bool {
+    $stmt = $this->pdo->prepare('UPDATE usuarios SET rol = :rol WHERE id = :id');
+    return $stmt->execute([':rol' => $rol, ':id' => $id]);
+  }
+
+  public function actualizarEstado(int $id, string $estado): bool {
+    $stmt = $this->pdo->prepare('UPDATE usuarios SET estado = :estado WHERE id = :id');
+    return $stmt->execute([':estado' => $estado, ':id' => $id]);
+  }
 }
