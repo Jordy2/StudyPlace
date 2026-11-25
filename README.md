@@ -76,7 +76,7 @@ Sistema web donde **estudiantes** pueden buscar **mentores** por materia y día,
 
 ### Actualizar una base de datos existente
 
-Si la base ya tenía la versión anterior de `disponibilidad_mentor` vinculada a materias, ejecuta una sola vez `database/migraciones/002_disponibilidad_general.sql` después de actualizar el código. La migración conserva una copia de la tabla anterior en `disponibilidad_mentor_legado`. Si los datos de las materias muestran signos `?` en lugar de tildes, ejecuta `database/migraciones/003_corregir_tildes_materias.sql`; esta corrección de datos es repetible y no cambia el esquema. Para una instalación nueva, usa `database/script.sql`.
+Si la base ya tenía la versión anterior de `disponibilidad_mentor` vinculada a materias, ejecuta una sola vez `database/migraciones/002_disponibilidad_general.sql` después de actualizar el código. La migración conserva una copia de la tabla anterior en `disponibilidad_mentor_legado`. Si los datos de las materias muestran signos `?` en lugar de tildes, ejecuta `database/migraciones/003_corregir_tildes_materias.sql`; esta corrección de datos es repetible y no cambia el esquema. Para activar la gestión de usuarios y la auditoría (módulo 11), ejecuta una sola vez `database/migraciones/004_auditoria.sql`; crea la tabla `auditoria_admin`. Para una instalación nueva, usa `database/script.sql`.
 
 ## Roles
  
