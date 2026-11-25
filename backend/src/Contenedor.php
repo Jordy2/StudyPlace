@@ -3,23 +3,28 @@
 namespace App;
 
 use App\Config\Conexion;
+use App\Contratos\AuditoriaRepositorioInterface;
 use App\Contratos\AutenticacionServicioInterface;
 use App\Contratos\DisponibilidadRepositorioInterface;
 use App\Contratos\DisponibilidadServicioInterface;
 use App\Contratos\EspacioRepositorioInterface;
 use App\Contratos\EspacioServicioInterface;
+use App\Contratos\GestionUsuariosServicioInterface;
 use App\Contratos\MateriaRepositorioInterface;
 use App\Contratos\MateriaServicioInterface;
 use App\Contratos\MentorMateriaRepositorioInterface;
 use App\Contratos\PerfilServicioInterface;
 use App\Contratos\TokenRepositorioInterface;
 use App\Contratos\UsuarioRepositorioInterface;
+use App\Controladores\AuditoriaControlador;
 use App\Controladores\AutenticacionControlador;
 use App\Controladores\DisponibilidadControlador;
 use App\Controladores\EspacioControlador;
 use App\Controladores\MateriaControlador;
 use App\Controladores\PerfilControlador;
+use App\Controladores\UsuarioAdminControlador;
 use App\Middleware\AutenticacionMiddleware;
+use App\Repositorios\AuditoriaRepositorio;
 use App\Repositorios\DisponibilidadRepositorio;
 use App\Repositorios\EspacioRepositorio;
 use App\Repositorios\MateriaRepositorio;
@@ -29,12 +34,9 @@ use App\Repositorios\UsuarioRepositorio;
 use App\Servicios\AutenticacionServicio;
 use App\Servicios\DisponibilidadServicio;
 use App\Servicios\EspacioServicio;
+use App\Servicios\GestionUsuariosServicio;
 use App\Servicios\MateriaServicio;
 use App\Servicios\PerfilServicio;
-use App\Contratos\GamificacionRepositorioInterface;
-use App\Contratos\GamificacionServicioInterface;
-use App\Repositorios\GamificacionRepositorio;
-use App\Servicios\GamificacionServicio;
 use PDO;
 
 class Contenedor {
@@ -61,8 +63,10 @@ class Contenedor {
   private ?DisponibilidadServicioInterface $disponibilidadServicio = null;
   private ?DisponibilidadControlador $disponibilidadControlador = null;
 
-  private ?GamificacionRepositorioInterface $gamificacionRepo = null;
-  private ?GamificacionServicioInterface $gamificacionServicio = null;
+  private ?AuditoriaRepositorioInterface $auditoriaRepo = null;
+  private ?GestionUsuariosServicioInterface $gestionUsuariosServicio = null;
+  private ?UsuarioAdminControlador $usuarioAdminControlador = null;
+  private ?AuditoriaControlador $auditoriaControlador = null;
 
   public function __construct(?PDO $pdo = null) {
     $this->pdo = $pdo;
@@ -243,22 +247,45 @@ class Contenedor {
     return $this->disponibilidadControlador;
   }
 
-  public function obtenerGamificacionRepositorio(): GamificacionRepositorioInterface {
-    if ($this->gamificacionRepo === null) {
-      $this->gamificacionRepo = new GamificacionRepositorio($this->obtenerConexion());
+  public function obtenerAuditoriaRepositorio(): AuditoriaRepositorioInterface {
+    if ($this->auditoriaRepo === null) {
+      $this->auditoriaRepo = new AuditoriaRepositorio($this->obtenerConexion());
     }
 
-    return $this->gamificacionRepo;
+    return $this->auditoriaRepo;
   }
 
-  public function obtenerGamificacionServicio(): GamificacionServicioInterface {
-    if ($this->gamificacionServicio === null) {
-      $this->gamificacionServicio = new GamificacionServicio(
-        $this->obtenerGamificacionRepositorio()
+  public function obtenerGestionUsuariosServicio(): GestionUsuariosServicioInterface {
+    if ($this->gestionUsuariosServicio === null) {
+      $this->gestionUsuariosServicio = new GestionUsuariosServicio(
+        $this->obtenerUsuarioRepositorio(),
+        $this->obtenerTokenRepositorio(),
+        $this->obtenerAuditoriaRepositorio()
       );
     }
 
-    return $this->gamificacionServicio;
+    return $this->gestionUsuariosServicio;
   }
 
+  public function obtenerUsuarioAdminControlador(): UsuarioAdminControlador {
+    if ($this->usuarioAdminControlador === null) {
+      $this->usuarioAdminControlador = new UsuarioAdminControlador(
+        $this->obtenerGestionUsuariosServicio(),
+        $this->obtenerAutenticacionMiddleware()
+      );
+    }
+
+    return $this->usuarioAdminControlador;
+  }
+
+  public function obtenerAuditoriaControlador(): AuditoriaControlador {
+    if ($this->auditoriaControlador === null) {
+      $this->auditoriaControlador = new AuditoriaControlador(
+        $this->obtenerGestionUsuariosServicio(),
+        $this->obtenerAutenticacionMiddleware()
+      );
+    }
+
+    return $this->auditoriaControlador;
+  }
 }
