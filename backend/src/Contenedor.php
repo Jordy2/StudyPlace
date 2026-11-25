@@ -31,6 +31,10 @@ use App\Servicios\DisponibilidadServicio;
 use App\Servicios\EspacioServicio;
 use App\Servicios\MateriaServicio;
 use App\Servicios\PerfilServicio;
+use App\Contratos\GamificacionRepositorioInterface;
+use App\Contratos\GamificacionServicioInterface;
+use App\Repositorios\GamificacionRepositorio;
+use App\Servicios\GamificacionServicio;
 use PDO;
 
 class Contenedor {
@@ -56,6 +60,9 @@ class Contenedor {
   private ?DisponibilidadRepositorioInterface $disponibilidadRepo = null;
   private ?DisponibilidadServicioInterface $disponibilidadServicio = null;
   private ?DisponibilidadControlador $disponibilidadControlador = null;
+
+  private ?GamificacionRepositorioInterface $gamificacionRepo = null;
+  private ?GamificacionServicioInterface $gamificacionServicio = null;
 
   public function __construct(?PDO $pdo = null) {
     $this->pdo = $pdo;
@@ -235,4 +242,23 @@ class Contenedor {
 
     return $this->disponibilidadControlador;
   }
+
+  public function obtenerGamificacionRepositorio(): GamificacionRepositorioInterface {
+    if ($this->gamificacionRepo === null) {
+      $this->gamificacionRepo = new GamificacionRepositorio($this->obtenerConexion());
+    }
+
+    return $this->gamificacionRepo;
+  }
+
+  public function obtenerGamificacionServicio(): GamificacionServicioInterface {
+    if ($this->gamificacionServicio === null) {
+      $this->gamificacionServicio = new GamificacionServicio(
+        $this->obtenerGamificacionRepositorio()
+      );
+    }
+
+    return $this->gamificacionServicio;
+  }
+
 }
